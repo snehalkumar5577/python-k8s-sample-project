@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      volumes:
+        - name: sample-cm-volume
+          configMap:
+            name: sample-cm
+      containers:
+        - name: myapp
+          image: myimage:1.0.0
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: sample-cm-volume
+              mountPath: /etc/config
+          imagePullPolicy: IfNotPresent
+          args:
+            - "/etc/config/sample-config.yaml"
